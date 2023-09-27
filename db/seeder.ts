@@ -1,5 +1,6 @@
 import Products, { Product } from '@/models/Product';
 import Users, { User } from '@/models/User';
+import Orders, { Order } from '@/models/Order';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 
@@ -36,6 +37,26 @@ async function seed() {
   await conn.connection.db.dropDatabase();
 
   const insertedProducts = await Products.insertMany(products);
+
+  const orders: Order[] = [
+    {
+      date: new Date(),
+      address: '123 Main St, 12345 New York, United States',
+      cardHolder: 'John Doe',
+      cardNumber: '1234 1234 1234 1234',
+      orderItems: [
+        {
+          product: insertedProducts[0]._id,
+          qty: 2,
+          price: products[0].price,
+        }
+      ]
+    },
+
+  ];
+  
+
+  const insertedOrders = await Orders.insertMany(orders);
   const user: User = {
     email: 'johndoe@example.com',
     password: '1234',
@@ -53,10 +74,19 @@ async function seed() {
         qty: 5,
       },
     ],
-    orders: [],
+    orders: [
+      insertedOrders[0]._id,
+    ],
   };
   const res = await Users.create(user);
   console.log(JSON.stringify(res, null, 2));
+
+
+  const retrievedUser = await Users
+  .findOne({ email: 'johndoe@example.com' })
+  .populate('cartItems.product');
+  console.log(JSON.stringify(retrievedUser, null, 2));
+
 
   await conn.disconnect();
 }
