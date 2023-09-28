@@ -109,3 +109,114 @@ export async function getProduct(productId: string): Promise<UserResponse | null
 
     return product;
 }
+
+export interface CartItemsResponse {
+    cartItems: User['cartItems'];
+}
+
+export async function getCartItems(userId: string): Promise<CartItemsResponse| null> {
+    await connect();
+
+    const userProjection = {
+        cartItems: true,
+    };
+
+    const productProjection = {
+        name: true,
+        price: true,
+    }
+
+    const user = await Users.findById(userId, userProjection);
+
+    if (user === null) {
+        return null;
+    }
+
+    return user.populate('cartItems.product', productProjection);
+}
+
+export async function addProductToCart(userId: string, productId: string, qty: number): Promise<CartItemsResponse | null> {
+    await connect();
+
+    const userProjection = {
+        cartItems: true,
+    };
+
+    const productProjection = {
+        name: true,
+        price: true,
+    }
+
+    const user = await Users.findById(userId, userProjection);//.populate('cartItems.product', productProjection);
+    if (user === null) {
+        return null;
+    }
+
+    const product = await Products.findById(productId);
+    if (product === null) {
+        return null;
+    }
+
+    const cart = user.cartItems;
+    
+    let exists = false;
+    for (let i = 0; i < cart.length; i++) {
+        if (cart[i].product == productId) {
+            cart[i].qty = qty;
+            exists = true;
+        }
+    }
+
+
+    if (exists === false) {
+        cart.push({
+            product: productId,
+            qty: qty,
+        });
+    }
+
+    await Users.findByIdAndUpdate(userId, { cartItems: cart });
+
+    return user.populate('cartItems.product', productProjection);
+}
+
+export async function deleteProductFromCart(userId: string, productId: string): Promise<CartItemsResponse | null>{
+    await connect();
+
+    const userProjection = {
+        cartItems: true,
+    };
+
+    const productProjection = {
+        name: true,
+        price: true,
+    };
+
+    const user = await Users.findById(userId, userProjection);
+    if (user === null) {
+        return null;
+    }
+
+    const product = await Products.findById(productId);
+    if (product === null) {
+        return null;
+    }
+
+    const cart = user.cartItems;
+
+    let exists = false;
+    for(let i = 0; i < cart.length; i++) {
+        if (cart[i].product == productId) {
+            cart.splice(i, 1);
+            exists = true;
+        }
+    }
+
+    if (exists === false) {
+        return null;
+    }
+
+    await Users.findByIdAndUpdate(userId, { cartItems: cart });
+
+    return user.populate('cartItems.product', productProjection);
+} 
