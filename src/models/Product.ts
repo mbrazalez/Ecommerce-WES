@@ -8,7 +8,7 @@ img: string;
 price: number;
 }
 
-const UserSchema = new Schema({
+const ProductSchema = new Schema({
     name: {
         type: String,
         required: true,
@@ -28,4 +28,4 @@ const UserSchema = new Schema({
     }
 });
 
-export default mongoose.models.Product || mongoose.model<Product>('Product', UserSchema);
+export default mongoose.models.Product || mongoose.model<Product>('Product', ProductSchema);

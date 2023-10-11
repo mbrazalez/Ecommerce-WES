@@ -165,7 +165,7 @@ export async function getProduct(productId: string): Promise<UserResponse | null
 // * INTERFACE OF DELETE: /api/users/[userId]/cart[productId]
 
 export interface CartItemsResponse {
-    cartItems: User['cartItems'];
+    cartItems: Types.ObjectId[];
 }
 
 // * FUNCTION: GET /api/users/[userId]/cart
@@ -310,7 +310,7 @@ export interface OrdersResponse {
 
 // * FUNCTION: GET /api/users/[userId]/orders
 
-export async function getOrders(userId: string): Promise <OrdersResponse | null> {
+export async function getOrders(userId: string): Promise<OrdersResponse | null> {
     await connect();
 
     const userProjection = {
@@ -319,11 +319,12 @@ export async function getOrders(userId: string): Promise <OrdersResponse | null>
     };
     
     const orderProjection = {
+        _id: false,
         date: true,
         address: true,
         cardHolder: true,
         cardNumber: true,
-    }
+    };
 
     const user = await Users.findById(userId, userProjection);
 
@@ -332,4 +333,52 @@ export async function getOrders(userId: string): Promise <OrdersResponse | null>
     }
 
     return user.populate('orders', orderProjection);
+}
+
+
+// *******************************************
+// *******************************************
+
+export async function createOrder(userId: string, address: string, cardHolder: string, cardNumber: string): Promise<{_id: string;} | null>{
+    await connect();
+
+    const user = await Users.findById(userId).populate('cartItems.product');
+
+    if (user === null) {
+        return null;
+    }
+
+    const cart = user.cartItems;
+
+    if (cart.length === 0) {
+        return null;
+    }
+
+    const orderItems = user.cartItems.map((item: any) =>{
+        return{
+            product: item.product,
+            qty: item.qty,
+            price: item.product.price,
+        }
+    });
+
+    const order: Order = {
+        date: new Date(),
+        address: address,
+        cardHolder: cardHolder,
+        cardNumber: cardNumber,
+        orderItems: orderItems,
+    };
+
+    const newOrder = await Orders.create(order);
+    const orderId = newOrder._id;
+
+    user.cartItems = [];
+    user.orders.push(orderId);
+
+    await user.save();
+
+    return {
+        _id: orderId,
+    };
 }
