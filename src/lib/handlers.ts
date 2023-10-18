@@ -8,6 +8,8 @@ import { unstable_renderSubtreeIntoContainer } from 'react-dom';
 
 import Orders, { Order } from '@/models/Order';
 
+import bcrypt from 'bcrypt';
+
 // * INTERFACE OF: POST /api/users
 
 export interface CreateUserResponse {
@@ -32,8 +34,11 @@ export async function createUser(user: {
         return null;
     }
 
+    const hash = await bcrypt.hash(user.password, 10);
+
     const doc: User = {
-        ...user,
+        ...user, // spread operator, which means that we are copying all the properties of the user object
+        password: hash,
         birthdate: new Date(user.birthdate),
         cartItems: [],
         orders: [],

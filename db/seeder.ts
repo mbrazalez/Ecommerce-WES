@@ -36,7 +36,7 @@ async function seed() {
 
   await conn.connection.db.dropDatabase();
 
-  const insertedProducts = await Products.insertMany(products);
+  /*const insertedProducts = await Products.insertMany(products);
 
   const orders: Order[] = [
     {
@@ -85,8 +85,11 @@ async function seed() {
   const retrievedUser = await Users
   .findOne({ email: 'johndoe@example.com' })
   .populate('cartItems.product');
-  console.log(JSON.stringify(retrievedUser, null, 2));
+  console.log(JSON.stringify(retrievedUser, null, 2));*/
 
+  await Products.insertMany(products);
+  await Users.createCollection();
+  await Orders.createCollection();
 
   await conn.disconnect();
 }
