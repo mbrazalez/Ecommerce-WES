@@ -1,57 +1,79 @@
-import { Types } from 'mongoose';
-import { NextRequest, NextResponse } from 'next/server';
-import { addProductToCart, CartItemsResponse } from '@/lib/handlers';
-import { deleteProductFromCart } from '@/lib/handlers'; 
-import { getCartItems } from '@/lib/handlers';
+import { CartItemsResponse, updateCartItem, deleteCartItem } from "@/lib/handlers";
+import { Types } from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function PUT(
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/authOptions';
+
+export async function PUT (
     request: NextRequest,
     {
         params,
-    }:{
+    }: {
         params: { userId: string, productId: string };
     }
-): Promise <NextResponse<CartItemsResponse> | {}> {
-    const body = await request.json();
+): Promise<NextResponse<CartItemsResponse> | {}> {
 
-    if (!Types.ObjectId.isValid(params.userId) || !Types.ObjectId.isValid(params.productId) || !body.qty || body.qty < 1 ) {
+    const session: Session | null =
+    await getServerSession(authOptions);
+
+    if (!session?.user) {
+        return NextResponse.json({}, { status: 401 }); // 401 Unauthorized
+    }
+
+    const body = await request.json();
+    
+    if (body.qty<1 || !body.qty || !Types.ObjectId.isValid(params.userId) || !Types.ObjectId.isValid(params.productId)) {
         return NextResponse.json({}, { status: 400 });
     }
 
-    const prevuser = await getCartItems(params.userId);
-    const user = await addProductToCart(params.userId, params.productId, body.qty);
+    if (session.user._id !== params.userId) {
+        return NextResponse.json({}, { status: 403 }); // 403 Forbidden
+    }
 
-    if (user === null || prevuser === null) {
+    const cartItems = await updateCartItem(params.userId, params.productId, body.qty);
+
+    if (cartItems?.cartItems === null || cartItems === null) {
         return NextResponse.json({}, { status: 404 });
     }
 
-    // Verifica si se creó una nueva entrada en el carrito. Si se creó, devuelve 201
-    const result = user.cartItems.length - prevuser.cartItems.length;
-
-    if (result === 1) {
-        return NextResponse.json(user, { status: 201 });
+    if (cartItems?.exists) {
+        return NextResponse.json({cartItems: cartItems.cartItems});
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json({cartItems:cartItems?.cartItems}, { status: 201 });
+
 }
 
-export async function DELETE(
+export async function DELETE (
     request: NextRequest,
     {
         params,
-    }:{
+    }: {
         params: { userId: string, productId: string };
     }
-): Promise <NextResponse<CartItemsResponse> | {}> {
+): Promise<NextResponse<CartItemsResponse> | {}> {
+    const session: Session | null =
+    await getServerSession(authOptions);
+
+    if (!session?.user) {
+        return NextResponse.json({}, { status: 401 }); // 401 Unauthorized
+    }
+
     if (!Types.ObjectId.isValid(params.userId) || !Types.ObjectId.isValid(params.productId)) {
         return NextResponse.json({}, { status: 400 });
     }
 
-    const user = await deleteProductFromCart(params.userId, params.productId);
+    if (session.user._id !== params.userId) {
+        return NextResponse.json({}, { status: 403 }); // 403 Forbidden
+    }
+    
+    const cartItems = await deleteCartItem(params.userId, params.productId);
 
-    if (user === null) {
+    if (cartItems === null) {
         return NextResponse.json({}, { status: 404 });
     }
 
-    return NextResponse.json(user);
+    return NextResponse.json(cartItems);
 }

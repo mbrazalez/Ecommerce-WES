@@ -1,51 +1,79 @@
-import { Types } from 'mongoose';
-import {NextRequest, NextResponse} from 'next/server';
-import {getOrders, OrdersResponse} from '@/lib/handlers';
-import {createOrder} from '@/lib/handlers';
+import { OrdersResponse, createOrder, getOrders } from "@/lib/handlers";
+import { Types } from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
+
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/authOptions';
 
 export async function GET(
     request: NextRequest,
     {
-        params,
+      params,
     }: {
-        params: { userId: string };
+      params: { userId: string };
     }
-): Promise <NextResponse<OrdersResponse>| {}> {
-    if (!Types.ObjectId.isValid(params.userId)) {
-        return NextResponse.json({}, { status: 400 });
-    }
+): Promise<NextResponse<OrdersResponse> | {}> {
+  const session: Session | null =
+  await getServerSession(authOptions);
 
-    const user = await getOrders(params.userId);
+  if (!session?.user) {
+    return NextResponse.json({}, { status: 401 }); // 401 Unauthorized
+  }
 
-    if (user === null) {
-        return NextResponse.json({}, { status: 404 });
-    }
+  if (!Types.ObjectId.isValid(params.userId)) {
+    return NextResponse.json({}, { status: 400 });
+  }
 
-    return NextResponse.json(user);
+  if (session.user._id !== params.userId) {
+    return NextResponse.json({}, { status: 403 }); // 403 Forbidden
+  }
+
+  const orders = await getOrders(params.userId);
+
+  if (orders === null) {
+    return NextResponse.json({}, { status: 404 });
+  }
+
+  return NextResponse.json(orders);
 }
 
 export async function POST(
     request: NextRequest,
     {
-        params,
+      params,
     }: {
-        params: { userId: string };
-    }
-): Promise <NextResponse<{_id: string;} | null>| {}> {
-    const body = await request.json();
+      params: { userId: string };
+    },
+): Promise<NextResponse<OrdersResponse> | {} | 'empty'> {
+  const session: Session | null =
+  await getServerSession(authOptions);
 
-    if (!Types.ObjectId.isValid(params.userId) || !body.address || !body.cardHolder || !body.cardNumber) {
-        return NextResponse.json({}, { status: 400 });
-    }
+  if (!session?.user) {
+    return NextResponse.json({}, { status: 401 }); // 401 Unauthorized
+  }
 
-    const user = await createOrder(params.userId, body.address, body.cardHolder, body.cardNumber);
+  const body = await request.json();
 
-    if (user === null) {
-        return NextResponse.json({}, { status: 404 });
-    }
+  if (!Types.ObjectId.isValid(params.userId) || !body.address || !body.cardHolder || !body.cardNumber) {
+    return NextResponse.json({}, { status: 400 });
+  }
 
-    const headers = new Headers();
-    headers.append('Location', `/api/users/${params.userId}/orders/${user._id}`);
-    return NextResponse.json({ _id: user._id }, { status: 201, headers: headers });
+  const order = await createOrder(params.userId, body.address, body.cardHolder, body.cardNumber);
 
+  if (order === 'empty') {
+    return NextResponse.json({}, { status: 400 });
+  }
+
+  if (session.user._id !== params.userId) {
+    return NextResponse.json({}, { status: 403 }); // 403 Forbidden
+  }
+
+  if (order === null) {
+    return NextResponse.json({}, { status: 404 });
+  }
+
+  const headers = new Headers();
+  headers.append('Location', `/api/users/${params.userId}/orders/${order._id}`);
+  return NextResponse.json(order, { status: 201, headers: headers });
 }

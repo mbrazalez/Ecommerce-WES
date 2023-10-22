@@ -98,292 +98,276 @@ export async function getUser(userId: string): Promise<UserResponse | null> {
 
 
 
-// * INTERFACE OF: GET /api/products
-
-export interface ProductsResponse { // This interface defines the shape of the response.
-    products: Product[];
+export interface ProductsResponse {
+  products: Product[];
 }
-
-// * FUNCTION: GET /api/products
-
-export async function getProducts(): Promise<ProductsResponse> {// returns a promise of type ProductsResponse.
-    await connect();
-
-    const productProjection = { //atributos que quiero que me devuelva
-        name: true,
-        price: true,
-        img: true,
-    };
-    const products = await Products.find({}, productProjection);
-    return {
-        products: products,
-    };
-} // now we can use this function in our route.ts file
-
-
-
-
-
-
-// *******************************************
-// *******************************************
-
-
-//* INTERFACE OF: GET /api/products/[productId]
 
 export interface ProductResponse {
-    name: string;
-    price: number;
-    img: string;
-    description: string;
+  name: string;
+  price: number;
+  img: string;
 }
 
-// * FUNCTI0N: GET /api/products/[productId]
+/**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**/
 
-export async function getProduct(productId: string): Promise<UserResponse | null> {
-    await connect();
+// Logic for get the list of available products
+export async function getProducts(): Promise<ProductsResponse> {
+  await connect();
 
-    const productProjection = {
-        name: true,
-        price: true,
-        img: true,
-        description: true,
-    };
+  const productProjection = {
+    name: true,
+    brand: true,
+    color: true,
+    price: true,
+    img: true,
+  };
 
-    const product = await Products.findById(productId, productProjection);
-
-    if (product === null) {
-        return null;
-    }
-
-    return product;
+  const products = await Products.find({}, productProjection);
+  
+  return {
+    products: products,
+  };
 }
 
+// Logic for get the a product with a given id
+export async function getProduct(productId: string): Promise<ProductResponse | null> {
+  await connect();
 
+  const productProjection = {
+    name: true,
+    brand: true,
+    color: true,
+    price: true,
+    img: true,
+  };
 
+  const product = await Products.findById(productId, productProjection);
 
-// *******************************************
-// *******************************************
+  if (product === null) {
+    return null;
+  }
 
-// * INTERFACE OF: GET /api/users/[userId]/cart
-//* INTERFACE OF PUT: /api/users/[userId]/cart[productId]
-// * INTERFACE OF DELETE: /api/users/[userId]/cart[productId]
+  return product;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Logic for cartItems endpoints
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Needed interfaces to define the response of the endpoints 
 
 export interface CartItemsResponse {
-    cartItems: Types.ObjectId[];
+  cartItems: User['cartItems'];
 }
 
-// * FUNCTION: GET /api/users/[userId]/cart
-
-export async function getCartItems(userId: string): Promise<CartItemsResponse| null> {
-    await connect();
-
-    const userProjection = {
-        _id: false,
-        cartItems: true,
-    };
-
-    const productProjection = {
-        name: true,
-        price: true,
-    }
-
-    const user = await Users.findById(userId, userProjection);
-
-    if (user === null) {
-        return null;
-    }
-
-    return user.populate('cartItems.product', productProjection);
+export interface UpdateCartItemResponse {
+  cartItems: User['cartItems'];
+  exists: boolean;
 }
 
 
-// *******************************************
-// *******************************************
+/**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**/
 
+// Logic for get the items in the cart
+export async function getCartItems(userId: string): Promise<CartItemsResponse | null> {
+  await connect();
 
+  const userProjection = {
+    _id: false,
+    cartItems: true,
+  };
 
-// * FUNCTION: PUT /api/users/[userId]/cart/[productId]
+  const productProjection = {
+    name: true,
+    price: true,
+  };
 
-export async function addProductToCart(userId: string, productId: string, qty: number): Promise<CartItemsResponse | null> {
-    await connect();
+  const user = await Users.findById(userId, userProjection);
+  if (user === null) {
+    return null;
+  }
 
-    const userProjection = {
-        _id: false,
-        cartItems: true,
-    };
-
-    const productProjection = {
-        name: true,
-        price: true,
-    }
-
-    const user = await Users.findById(userId, userProjection);//.populate('cartItems.product', productProjection);
-    if (user === null) {
-        return null;
-    }
-
-    const product = await Products.findById(productId);
-    if (product === null) {
-        return null;
-    }
-
-    const cart = user.cartItems;
-
-    const productInCart = cart.find((item: { product: string }) => item.product == productId);
-
-    if (productInCart) {
-        productInCart.qty = qty;
-    } else {
-        cart.push({
-            product: productId,
-            qty: qty,
-        });
-    }
-
-    await Users.findByIdAndUpdate(userId, { cartItems: cart });
-
-    return user.populate('cartItems.product', productProjection);
+  return user.populate('cartItems.product',productProjection);
 }
 
-// *******************************************
-// *******************************************
+// Logic for update the cart
+export async function updateCartItem(userId: string, productId: string, qty: number): Promise<UpdateCartItemResponse | null> {
+  await connect();
 
+  const userProjection = {
+    _id: false,
+    cartItems: true,
+  };
 
-// * FUNCTION: DELETE /api/users/[userId]/cart/[productId]
+  const user = await Users.findById(userId, userProjection);
+  const product = await Products.findById(productId);
 
-export async function deleteProductFromCart(userId: string, productId: string): Promise<CartItemsResponse | null>{
-    await connect();
+  if (user === null || product === null) {
+    return null;
+  }
 
-    const userProjection = {
-        _id: false,
-        cartItems: true,
-    };
+  const existingCartItemIndex = user.cartItems.findIndex((item:any) => item.product.toString() === productId);
+  
+  let inCart = false;
 
-    const productProjection = {
-        name: true,
-        price: true,
-    };
+  if (existingCartItemIndex !== -1) {
+    user.cartItems[existingCartItemIndex].qty = qty;
+    inCart = true;
+  } else {
+    user.cartItems.push({ product: new Types.ObjectId(productId), qty: qty });
+  }
 
-    const user = await Users.findById(userId, userProjection);
-    if (user === null) {
-        return null;
-    }
+  await Users.findByIdAndUpdate(userId, { cartItems: user.cartItems });
+  await user.populate('cartItems.product', { name: true, price: true });
 
-    const product = await Products.findById(productId);
-    if (product === null) {
-        return null;
-    }
-
-    const cart = user.cartItems;
-
-    /*let exists = false;
-    for(let i = 0; i < cart.length; i++) {
-        if (cart[i].product == productId) {
-            cart.splice(i, 1);
-            exists = true;
-        }
-    }
-
-    if (exists === false) {
-        return null;
-    }*/
-
-    const productInCart = cart.find((item: { product: string }) => item.product == productId);
-
-    if (productInCart) {
-        const index = cart.indexOf(productInCart);
-        cart.splice(index, 1);
-    } else {
-        return null;
-    }
-
-    await Users.findByIdAndUpdate(userId, { cartItems: cart });
-
-    return user.populate('cartItems.product', productProjection);
+  return {cartItems: user.cartItems , exists: inCart};
 }
 
 
-// *******************************************
-// *******************************************
+// Logic for delete a cartItem
+export async function deleteCartItem(userId: string, productId: string): Promise<CartItemsResponse | null> {
+  await connect();
 
-// * INTERFACE OF: GET /api/users/[userId]/orders
+  const userProjection = {
+    _id: false,
+    cartItems: true,
+  };
+
+  const user = await Users.findById(userId, userProjection);
+
+  if (user === null) {
+    return null;
+  }
+
+  const cartItems = user.cartItems;
+  const existingCartItemIndex = user.cartItems.findIndex((item:any) => item.product.toString() === productId);
+  
+  if (existingCartItemIndex === -1) {
+    return null;
+  }  
+  
+  cartItems.splice(existingCartItemIndex, 1);
+
+  await Users.findByIdAndUpdate(userId, { cartItems: cartItems });
+  await user.populate('cartItems.product', { name: true, price: true })
+
+  return user;
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    Logic for Orders endpoints
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Needed interfaces to define the response of the endpoints 
 
 export interface OrdersResponse {
-    orders: User['orders'];
+  orders: User['orders'];
 }
 
-// * FUNCTION: GET /api/users/[userId]/orders
+export interface OrderResponse {
+  _id?: Types.ObjectId;
+    orderItems: {
+        product: Types.ObjectId;
+        qty: number;
+        price: number;
+    }[];
+    date: Date;
+    address: string;
+    cardHolder: string;
+    cardNumber: string;
+}
 
+/**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**/
+
+// Logic for get all the orders of a user
 export async function getOrders(userId: string): Promise<OrdersResponse | null> {
-    await connect();
+  await connect();
 
-    const userProjection = {
-        _id: false,
-        orders: true,
-    };
-    
-    const orderProjection = {
-        _id: false,
-        date: true,
-        address: true,
-        cardHolder: true,
-        cardNumber: true,
-    };
+  const orderProjection = {
+    _id: false,
+    orders: true,
+  };
 
-    const user = await Users.findById(userId, userProjection);
+  const orderShowProjection = {
+    date: true,
+    address: true,
+    cardHolder: true,
+    cardNumber: true,
+  };
 
-    if (user === null){
-        return null;
-    }
+  const user = await Users.findById(userId, orderProjection);
+  if (user === null || user.orders.length === 0) {
+    return null;
+  }
 
-    return user.populate('orders', orderProjection);
+  return user.populate('orders', orderShowProjection);
 }
 
+// Logic for get the order of a user with a given an id 
+export async function getOrder (userId:string, orderId:string): Promise<OrderResponse | null>{
+  await connect();
 
-// *******************************************
-// *******************************************
+  const userProjection = {
+    _id: false,
+    orders: true,
+  };
 
-export async function createOrder(userId: string, address: string, cardHolder: string, cardNumber: string): Promise<{_id: string;} | null>{
-    await connect();
+  const user = await Users.findById(userId, userProjection);
+  
+  if (user === null) {
+    return null;
+  }
 
-    const user = await Users.findById(userId).populate('cartItems.product');
+  const existingOrderIndex = user.orders.findIndex((item:any) => item.toString() === orderId);
 
-    if (user === null) {
-        return null;
-    }
+  if (existingOrderIndex === -1) {
+    return null;
+  }
 
-    const cart = user.cartItems;
+  const order = await Orders.findById(orderId, {__v: false});
+  return order.populate('orderItems.product', {name: true});
 
-    if (cart.length === 0) {
-        return null;
-    }
+}
+  
+//Logic for create a new order
+export async function createOrder(userId: string, address:string, cardHolder: string, cardNumber: string): Promise<{ _id: string; } | null | 'empty'> {
+  await connect();
 
-    const orderItems = user.cartItems.map((item: any) =>{
-        return{
-            product: item.product,
-            qty: item.qty,
-            price: item.product.price,
-        }
-    });
+  const user = await Users.findById(userId).populate('cartItems.product');
+  if (user === null) {
+    return null;
+  }
 
-    const order: Order = {
-        date: new Date(),
-        address: address,
-        cardHolder: cardHolder,
-        cardNumber: cardNumber,
-        orderItems: orderItems,
-    };
+  if (user.cartItems.length === 0) {
+    return 'empty';
+  }
 
-    const newOrder = await Orders.create(order);
-    const orderId = newOrder._id;
-
-    user.cartItems = [];
-    user.orders.push(orderId);
-
-    await user.save();
-
+  const orderItems = user.cartItems.map((item:any) => {
     return {
-        _id: orderId,
+      product: item.product,
+      qty: item.qty,
+      price: item.product.price,
     };
+  });
+
+  const orderDoc: Order = {
+    orderItems: orderItems,
+    date: new Date(),
+    address: address,
+    cardHolder: cardHolder,
+    cardNumber: cardNumber,
+  };
+
+  const newOrder = await Orders.create(orderDoc);
+  const orderId = newOrder._id;
+
+  user.cartItems = [];
+  user.orders.push(orderId);
+
+  await Users.findByIdAndUpdate(userId, { cartItems: user.cartItems, orders: user.orders });
+
+  return  {
+    _id: orderId,
+  };
 }

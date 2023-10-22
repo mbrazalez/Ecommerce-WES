@@ -1,4 +1,4 @@
-import { CartItemsResponse, getCartItems } from "@/lib/handlers";
+import { OrderResponse, getOrder } from "@/lib/handlers";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,12 +8,11 @@ import { authOptions } from '@/lib/authOptions';
 
 export async function GET(
     request: NextRequest,
-    {
-        params,
-    }: {
-        params: { userId: string };
+    { params, 
+    }: { 
+        params: { userId: string, orderId: string } 
     }
-): Promise<NextResponse<CartItemsResponse> | {}> {
+) : Promise<NextResponse<OrderResponse> | {}> {
     const session: Session | null =
     await getServerSession(authOptions);
 
@@ -21,7 +20,7 @@ export async function GET(
         return NextResponse.json({}, { status: 401 }); // 401 Unauthorized
     }
 
-    if (!Types.ObjectId.isValid(params.userId)) {
+    if (!Types.ObjectId.isValid(params.userId) || !Types.ObjectId.isValid(params.orderId)) {
         return NextResponse.json({}, { status: 400 });
     }
 
@@ -29,11 +28,11 @@ export async function GET(
         return NextResponse.json({}, { status: 403 }); // 403 Forbidden
     }
 
-    const cartItems = await getCartItems(params.userId);
+    const order = await getOrder(params.userId, params.orderId);
 
-    if (cartItems === null) {
+    if (order === null) {
         return NextResponse.json({}, { status: 404 });
     }
 
-    return NextResponse.json(cartItems);
+    return NextResponse.json(order);
 }

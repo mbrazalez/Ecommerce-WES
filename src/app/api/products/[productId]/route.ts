@@ -1,6 +1,8 @@
-import { Types } from 'mongoose';
-import { NextRequest, NextResponse } from 'next/server';
-import { getProduct, ProductResponse } from '@/lib/handlers';
+import { ProductsResponse, getProduct } from "@/lib/handlers";
+import { Types } from "mongoose";
+import { NextRequest, NextResponse } from "next/server";
+
+
 
 export async function GET(
     request: NextRequest,
@@ -9,7 +11,7 @@ export async function GET(
     }: {
         params: { productId: string };
     }
-): Promise<NextResponse<ProductResponse> | {}> {
+): Promise<NextResponse<ProductsResponse> | {}> {
     if (!Types.ObjectId.isValid(params.productId)) {
         return NextResponse.json({}, { status: 400 });
     }
@@ -17,7 +19,7 @@ export async function GET(
     const product = await getProduct(params.productId);
 
     if (product === null) {
-        return NextResponse.json({}, { status: 404});
+        return NextResponse.json({}, { status: 404 });
     }
 
     return NextResponse.json(product);
