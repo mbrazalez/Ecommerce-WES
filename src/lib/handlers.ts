@@ -104,8 +104,11 @@ export interface ProductsResponse {
 
 export interface ProductResponse {
   name: string;
+  brand: string;
   price: number;
   img: string;
+  color: string;
+  size: string;
 }
 
 /**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**/
@@ -135,6 +138,7 @@ export async function getProduct(productId: string): Promise<ProductResponse | n
 
   const productProjection = {
     name: true,
+    size: true,
     brand: true,
     color: true,
     price: true,

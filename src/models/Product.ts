@@ -1,6 +1,7 @@
 import mongoose, { Schema, Types } from 'mongoose';
 
 export interface Product {
+  _id?: Types.ObjectId;
   name: string;
   brand: string;
   size: string;
