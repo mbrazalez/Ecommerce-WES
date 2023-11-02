@@ -9,10 +9,10 @@ export interface User {
   address: string;
   birthdate: Date;
   cartItems: {
-    product: Types.ObjectId;
+    product: Types.ObjectId; // Reference
     qty: number;
-  }[];
-  orders: Types.ObjectId[];
+  }[]; // * El [] es un array de nested documents
+  orders: Types.ObjectId[]; // Array of references
 }
 
 const UserSchema = new Schema({

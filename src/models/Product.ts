@@ -1,10 +1,14 @@
 import mongoose, { Schema, Types } from 'mongoose';
 
 export interface Product {
+  _id?: Types.ObjectId;
   name: string;
-  description: string;
+  brand: string;
+  size: string;
+  color: string;
   img: string;
   price: number;
+  description: string;
 }
 
 const ProductSchema = new Schema({
@@ -12,18 +16,30 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
-  description: {
+  brand: {
     type: String,
-    required: true,
+    required: false,
   },
-  img: {
+  size: {
     type: String,
-    required: true,
+    required: false,
+  },
+  color: {
+    type: String,
+    required: false,
   },
   price: {
     type: Number,
     required: true,
     min: 0
+  },
+  img: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: false,
   }
 });
 
