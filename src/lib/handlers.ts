@@ -109,6 +109,7 @@ export interface ProductResponse {
   img: string;
   color: string;
   size: string;
+  description: string;
 }
 
 /**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**//**/
@@ -123,6 +124,7 @@ export async function getProducts(): Promise<ProductsResponse> {
     color: true,
     price: true,
     img: true,
+    description: true,
   };
 
   const products = await Products.find({}, productProjection);
@@ -143,6 +145,7 @@ export async function getProduct(productId: string): Promise<ProductResponse | n
     color: true,
     price: true,
     img: true,
+    description: true,
   };
 
   const product = await Products.findById(productId, productProjection);
@@ -301,7 +304,7 @@ export async function getOrders(userId: string): Promise<OrdersResponse | null> 
   };
 
   const user = await Users.findById(userId, orderProjection);
-  if (user === null || user.orders.length === 0) {
+  if (user === null) {
     return null;
   }
 

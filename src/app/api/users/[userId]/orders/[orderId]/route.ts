@@ -31,7 +31,7 @@ export async function GET(
     const order = await getOrder(params.userId, params.orderId);
 
     if (order === null) {
-        return NextResponse.json({}, { status: 404 });
+        return NextResponse.json({}, { status: 404 }); // 404 Not Found
     }
 
     return NextResponse.json(order);

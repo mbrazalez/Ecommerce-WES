@@ -8,6 +8,7 @@ export interface Product {
   color: string;
   img: string;
   price: number;
+  description: string;
 }
 
 const ProductSchema = new Schema({
@@ -36,6 +37,10 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: false,
+  }
 });
 
 export default mongoose.models.Product || mongoose.model('Product', ProductSchema);
