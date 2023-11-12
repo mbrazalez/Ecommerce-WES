@@ -23,7 +23,7 @@ export default async function Navbar() {
                         >
                             <img
                                 className='block h-8 w-auto'
-                                src='/img/logo.svg'
+                                src='https://images.vexels.com/media/users/3/132153/isolated/preview/2b07e0f940d92cdf0b02e0256417d93b-icono-de-circulo-de-patinaje.png'
                                 alt='SkatesShop logo'
                             />
                             <div className='inline-block w-auto text-xl font-semibold'>
@@ -53,7 +53,7 @@ export default async function Navbar() {
                         ) : (
                             <>
                                 <Link
-                                    href='/auth/signup'
+                                    href='#'
                                     className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-gray-100'
                                 >
                                     Sign up
