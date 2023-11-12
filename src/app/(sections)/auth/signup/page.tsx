@@ -1,8 +1,6 @@
-export default function Signup() {
-    return (
-    <div>
-    Sign up
-    </div>
-    );
-    }
+import { createUser } from '@/lib/handlers';
+
+export default function SignUpPage() {
+
+}
     
