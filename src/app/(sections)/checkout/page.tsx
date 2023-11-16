@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
-export default async function Cart() {
+export default async function Checkout() {
     const session: Session | null = await getServerSession(authOptions);
 
     if (!session) {
@@ -84,7 +84,7 @@ export default async function Cart() {
                         </div>
                         
                     </div>
-                    <div className="grid sm:grid-cols-2 sm:gap-6 py-10 mx-0 min-w-full flex flex-col sm:grid-cols-2">
+                    <div className="grid sm:gap-6 py-10 mx-0 min-w-full flex flex-col sm:grid-cols-2">
                         <div className="sm:col-span-2 py-2">
                             <label htmlFor="saddress" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Shipping address</label>
                             <input type="text" name="saddress" id="saddress" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="221b Baker, St, London, UK"/>
