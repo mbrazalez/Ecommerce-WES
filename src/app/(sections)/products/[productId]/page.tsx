@@ -19,46 +19,45 @@ export default async function Product({
     }
 
     return (
-        <div className='flex flex-col'>
+        <div className="flex-auto">
             <h3 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>
                 {product.name}
             </h3>
-            <div className='flex'>
-                <img
-                    src={product.img}
-                    alt={product.name}
-                    className='h-40 w-40 object-cover object-center group-hover:opacity-75'
-                />
-                <div className='ml-4'>
-                    {product.brand && <p><span className="font-bold">Brand:</span> {product.brand}</p>}
-                    {product.price && <p><span className="font-bold">Price:</span> {product.price}€</p>}
-                    {product.color && <p><span className="font-bold">Color:</span> {product.color}</p>}
-                    {product.size && <p><span className="font-bold">Size:</span> {product.size}</p>}
+            <div className="grid py-4 min-w-full flex flex-col sm:grid-cols-2">
+                <div className='w-full'>
+                    <div className='flex justify-center py-2'>
+                        <img
+                            src={product.img}
+                            alt={product.name}
+                            className='h-1/2 w-1/2'
+                        />
+                    </div>
+                    <p className="flex justify-center text-4xl text-gray-900 py-2 dark:text-white">{product.price} €</p>
+                    <div className="flex justify-center">  
+                        <div className="inline-flex rounded-md shadow-sm " role="group" >
+                            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-gray-200 dark:bg-gray-650 border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                                -
+                            </button>
+                            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border-t border-b border-gray-900 dark:border-white dark:text-white dark:focus:bg-gray-700">
+                                0
+                            </button>
+                            <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-gray-200 dark:bg-gray-650 border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                                +
+                            </button>
+                        </div>
+                        <div className="inline-flex rounded-md shadow-sm ml-2 ">
+                            <button type="button" className="inline-flex items-center px-2 py-2 text-gray-900 bg-red-200 dark:bg-red-400 border border-gray-900 rounded-lg hover:bg-red-600 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+                                    <path fillRule="evenodd" d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z" clipRule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>   
+                </div>
+                <div className='w-full py-10'>
+                    {product.description && <p><span className="font-bold">Product details <br/><br/></span> {product.description}</p>}
                 </div>
             </div>
-            <div className="flex items-center sm:grid-cols-2">     
-                <h4 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>{product.price}</h4>
-            </div>
-            <div className="flex items-center h-1">     
-                <div className="inline-flex rounded-md shadow-sm " role="group " >
-                    <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-                        -
-                    </button>
-                    <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border-t border-b border-gray-900 dark:border-white dark:text-white dark:focus:bg-gray-700">
-                        {qty}
-                    </button>
-                    <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-                        +
-                    </button>
-                </div>
-                <div className="inline-flex rounded-md shadow-sm ml-2 ">
-                    <button type="button" className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-900 bg-transparent border border-gray-900 rounded-lg hover:bg-red-600 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                        </svg>
-                    </button>
-                </div>
-            </div>   
-        </div>
+        </div>    
     );
 }
