@@ -1,6 +1,5 @@
-import { createUser } from '@/lib/handlers';
 
 export default function SignUpPage() {
-
+<h1>sign-up</h1>
 }
     

@@ -30,8 +30,8 @@ export default async function Cart() {
                     <h3 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>
                         My Shopping Cart
                     </h3>
-                    <div className="relative overflow-x-auto ">
-                        <div className="relative overflow-x-auto sm:rounded-lg">
+                    <div className="relative overflow-x-auto">
+                        <div className="relative overflow-x-auto rounded-lg">
                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
