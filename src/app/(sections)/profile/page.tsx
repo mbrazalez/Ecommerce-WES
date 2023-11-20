@@ -98,10 +98,10 @@ export default async function Profile() {
                                         <th scope="col" className="px-6 py-3">
                                             Order id
                                         </th>
-                                        <th scope="col" className="px-6 py-3 hidden sm:table-cell">
+                                        <th scope="col" className="px-6 py-3 hidden sm:table-cell md:table-cell">
                                             Shipment address
                                         </th>
-                                        <th scope="col" className="px-6 py-3 hidden sm:table-cell">
+                                        <th scope="col" className="px-6 py-3 hidden sm:table-cell md:table-cell">
                                             Payment information
                                         </th>
                                         <th scope="col" className="px-6 py-3">
@@ -115,10 +115,10 @@ export default async function Profile() {
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {order._id.toString()}
                                             </th>
-                                            <td className="px-6 py-4 hidden sm:table-cell">
+                                            <td className="px-6 py-4 hidden sm:table-cell md:table-cell">
                                                 {order.address}
                                             </td>
-                                            <td className="px-6 py-4 hidden sm:table-cell">
+                                            <td className="px-6 py-4 hidden sm:table-cell md:table-cell">
                                                 <p>
                                                     {order.cardHolder}
                                                 </p>
