@@ -47,7 +47,7 @@ export default async function Profile() {
                     <h3 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>
                         User Profile
                     </h3>
-                    <div className='flex'>
+                    <div className='flex truncate'>
                         <div>
                             {user.name && user.surname &&
                                 <p className='flex py-2'>
@@ -98,10 +98,10 @@ export default async function Profile() {
                                         <th scope="col" className="px-6 py-3">
                                             Order id
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
+                                        <th scope="col" className="px-6 py-3 hidden sm:table-cell">
                                             Shipment address
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
+                                        <th scope="col" className="px-6 py-3 hidden sm:table-cell">
                                             Payment information
                                         </th>
                                         <th scope="col" className="px-6 py-3">
@@ -115,10 +115,10 @@ export default async function Profile() {
                                             <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                                 {order._id.toString()}
                                             </th>
-                                            <td className="px-12 py-4">
+                                            <td className="px-6 py-4 hidden sm:table-cell">
                                                 {order.address}
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 hidden sm:table-cell">
                                                 <p>
                                                     {order.cardHolder}
                                                 </p>

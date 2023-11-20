@@ -35,7 +35,7 @@ export default async function Checkout() {
                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3">
+                                        <th scope="col" className="px-6 md:pr-72 lg:pr-80 xl:pr-96 py-3">
                                             Product Name                     
                                         </th>
                                         <th scope="col" className="px-6 py-3">
@@ -53,7 +53,7 @@ export default async function Checkout() {
                                     {data.cartItems.map((cartItem:any, index:number) => (
                                         <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700" 
                                                 key={cartItem.product._id.toString()}>
-                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" >
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white" >
                                                 <Link href={`/products/${cartItem.product._id}`}>
                                                     {cartItem.product.name}
                                                 </Link>
@@ -61,7 +61,7 @@ export default async function Checkout() {
                                             <td className="px-12 py-4">
                                                 {cartItem.qty}
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 whitespace-nowrap">
                                                 {cartItem.product.price+ ' €'}
                                             </td>
                                             <td className="px-6 py-4">
@@ -96,7 +96,7 @@ export default async function Checkout() {
 
                         <div className="w-full">
                             <label htmlFor="cnumber" className="block mb-2 text-sm font-medium text-gray-900">Card Number</label>
-                            <input type="number" name="cnumber" id="cnumber" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="00000111122223333"/>
+                            <input type="number" name="cnumber" id="cnumber" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="00000111122223333" />
                         </div>
                     </div>
                     <div className="container px-10 mx-0 min-w-full flex flex-col items-center">

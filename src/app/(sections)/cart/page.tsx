@@ -35,7 +35,7 @@ export default async function Cart() {
                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
-                                        <th scope="col" className="px-6 py-3">
+                                        <th scope="col" className="px-6 md:pr-72 lg:pr-80 xl:pr-96 py-3">
                                             Product Name                     
                                         </th>
                                         <th scope="col" className="px-6 py-3">
@@ -53,7 +53,7 @@ export default async function Cart() {
                                     {data.cartItems.map((cartItem:any, index:number) => (
                                         <tr className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700" 
                                                 key={cartItem.product._id.toString()}>
-                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white" >
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 dark:text-white" >
                                                 <Link href={`/products/${cartItem.product._id}`}>
                                                     {cartItem.product.name}
                                                 </Link>
@@ -84,7 +84,7 @@ export default async function Cart() {
                                                     </div>
                                                 </div>   
                                             </td>
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 whitespace-nowrap">
                                                 {cartItem.product.price+ ' €'}
                                             </td>
                                             <td className="px-6 py-4">
