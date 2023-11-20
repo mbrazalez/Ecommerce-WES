@@ -60,7 +60,7 @@ const products: Product[] = [
     brand: 'Toy Machine',
     size: '8.25 inches',
     color: 'green',
-    price: 54.90,
+    price: 54.95,
     img: 'https://cdn.skatespain.com/media/catalog/product/cache/1/small_image/1000x/602f0fa2c1f0d1ba5e241f914e856ff9/t/t/ttm009-tabla-skate-toy-machine-bury-the-hatchet_1.jpg',
     description: 'Embark on a legendary skateboarding journey with the Toy Machine Skateboard Demon-God edition. Hailing from the iconic brand, Toy Machine, this skateboard is a symbol of style and quality. Meticulously crafted in Mexico with Canadian maple, it delivers unmatched performance. The striking green color adds a touch of rebellion to your skate sessions. Perfect for riders who appreciate the combination of artistry and functionality in their skateboard. Unleash the power of the Demon-God!'
   }
