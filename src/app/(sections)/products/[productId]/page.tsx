@@ -1,6 +1,9 @@
 import { Types } from 'mongoose';
 import { notFound } from 'next/navigation';
 import { getProduct } from '@/lib/handlers';
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/authOptions';
 
 export default async function Product({
     params,
@@ -13,6 +16,8 @@ export default async function Product({
     }
 
     const product = await getProduct(params.productId);
+
+    const session: Session | null = await getServerSession(authOptions);
 
     if (product === null) {
         notFound();
@@ -33,6 +38,7 @@ export default async function Product({
                         />
                     </div>
                     <p className="flex justify-center text-4xl text-gray-900 py-2">{product.price} €</p>
+                    {session && (
                     <div className="flex justify-center">  
                         <div className="inline-flex rounded-md shadow-sm " role="group" >
                             <button type="button" className="inline-flex items-center px-4 py-1 text-gray-900 bg-gray-200 dark:bg-black border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-900">
@@ -56,7 +62,8 @@ export default async function Product({
                                 </svg>
                             </button>
                         </div>
-                    </div>   
+                    </div>
+                    )}    
                 </div>
                 <div className='w-full py-10 sm:py-0 md:py-0 lg:py-0 xl:py-0'>
                     <p className="text-2xl font-bold pb-3">Product Details</p>
