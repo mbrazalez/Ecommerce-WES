@@ -94,9 +94,50 @@ async function seed() {
       ],
       date: new Date(Date.now()),
       address: 'C/Felipe II, 2, 02600, Villarrobledo, Albacete',
+      cardHolder: 'Borni Doe',
+      cardNumber: '1234567890123456',
+    },  
+    {
+      orderItems: [
+        {
+          product: insertedProducts[1]._id,
+          qty: 2,
+          price: insertedProducts[1].price,
+        },
+        {
+          product: insertedProducts[2]._id,
+          qty: 3,
+          price: insertedProducts[2].price,
+        }
+      ],
+      date: new Date(Date.now()),
+      address: 'C/Hellin, 2, 02002, Albacete',
       cardHolder: 'John Doe',
       cardNumber: '1234567890123456',
-    },    
+    },
+    {
+      orderItems: [
+        {
+          product: insertedProducts[3]._id,
+          qty: 1,
+          price: insertedProducts[3].price,
+        },
+        {
+          product: insertedProducts[4]._id,
+          qty: 2,
+          price: insertedProducts[4].price,
+        },
+        {
+          product: insertedProducts[5]._id,
+          qty: 3,
+          price: insertedProducts[5].price,
+        }
+      ],
+      date: new Date(Date.now()),
+      address: 'C/Albacete, 2, 02600, Villarrobledo, Albacete',
+      cardHolder: 'Borni Doe',
+      cardNumber: '1234567890123456',
+    },
   ];
 
   const insertedOrders = await Orders.insertMany(orders);
@@ -121,7 +162,7 @@ async function seed() {
       },
     ],
     orders: [
-      insertedOrders[0]._id,
+      insertedOrders[1]._id,
     ],
   };
   const user2: User = {
@@ -129,7 +170,7 @@ async function seed() {
     password: password,
     name: 'Borni',
     surname: 'Doe',
-    address: '2 Felipe II, 02600 Villarrobledo, Spain',
+    address: 'Felipe II, 02600 Villarrobledo, Spain',
     birthdate: new Date('2002-04-01'),
     cartItems: [
       {
@@ -143,11 +184,24 @@ async function seed() {
     ],
     orders: [
       insertedOrders[0]._id,
+      insertedOrders[2]._id,
     ],
   };
+  const user3: User = {
+    email: 'empty@example.com',
+    password: password,
+    name: 'Empty',
+    surname: 'Doe',
+    address: 'Felipe II, 02600 Villarrobledo, Spain',
+    birthdate: new Date('2002-04-02'),
+    cartItems: [],
+    orders: [],
+  };
+
 
   const res = await Users.create(user);
   const res2 = await Users.create(user2);
+  const res3 = await Users.create(user3);
   console.log(JSON.stringify(res, null, 3));
 
   await conn.disconnect();
