@@ -21,15 +21,16 @@ export default async function Checkout() {
     }
     return (
         <div className='flex flex-col'>
+                <h3 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>
+                        Checkout
+                </h3>
             {data.cartItems.length === 0 ? (
                 <div className='text-center'>
                     <span className='text-sm text-gray-400'>The cart is empty</span>
                 </div>
             ) : (
                 <>
-                    <h3 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>
-                        Checkout
-                    </h3>
+
                     <div className="relative overflow-x-auto ">
                         <div className="relative overflow-x-auto rounded-lg">
                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
