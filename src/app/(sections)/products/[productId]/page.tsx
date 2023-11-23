@@ -11,6 +11,7 @@ export default async function Product({
     params: { productId: string };
 }) {
     let qty = 0;
+    
     if (!Types.ObjectId.isValid(params.productId)) {
         notFound();
     }

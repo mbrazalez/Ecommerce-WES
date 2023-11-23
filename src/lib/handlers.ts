@@ -1,13 +1,9 @@
 // This file contains the logic of the REST API endpoints
 import Products, { Product } from '@/models/Product';
 import connect from '@/lib/mongoose';
-
 import Users, { User } from '@/models/User';
 import { Types } from 'mongoose';
-import { unstable_renderSubtreeIntoContainer } from 'react-dom';
-
 import Orders, { Order } from '@/models/Order';
-
 import bcrypt from 'bcrypt';
 
 // * INTERFACE OF: POST /api/users
