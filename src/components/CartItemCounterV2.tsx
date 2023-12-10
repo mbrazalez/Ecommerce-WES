@@ -1,25 +1,28 @@
 'use client'
 
-import { useContext } from 'react'
-import { CartItemsContext } from '@/providers/CartItemsProvider'
+import { CartItemsContext,CartItem } from '@/providers/CartItemsProvider'
 import { useSession } from 'next-auth/react'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 
 interface CartItemCounterProps {
     productId: string;
+    cartList: CartItem[]; 
 }
 
-export default function CartItemCounter({
+export default function CartItemCounterV({
     productId,
+    cartList,
 
 }: CartItemCounterProps) {
+
     const { data: session } = useSession({ required: true });
-    const { cartItems, updateCartItems } = useContext(CartItemsContext);
+    const { cartItems,  updateCartItems } = useContext(CartItemsContext);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const cartItem = cartItems.find((cartItem) =>
+    const cartItem = cartList.find((cartItem) =>
         cartItem.product._id === productId
     );
+
     const qty = cartItem ? cartItem.qty : 0;
 
     const onPlusBtnClick = async function (event: React.MouseEvent) {
@@ -45,7 +48,7 @@ export default function CartItemCounter({
         }
     };
 
-    const onMinusBtnClick = async function (event: React.MouseEvent) {
+ const onMinusBtnClick = async function (event: React.MouseEvent) {
         setIsUpdating(true);
         let choosenMethod = 'PUT';
         let bodyContent : string  = JSON.stringify({
@@ -55,7 +58,6 @@ export default function CartItemCounter({
         if (qty === 1) {
             choosenMethod = 'DELETE';
             bodyContent = '';
-            
         }
 
         try{
@@ -96,9 +98,10 @@ export default function CartItemCounter({
             setIsUpdating(false);
         }
     }
-
     return (
         <>
+            <div className="flex items-center">
+                <>
             <div className="flex items-center">                         
                 <div className="inline-flex rounded-md shadow-sm " role="group" >
                     <button onClick={onMinusBtnClick} type="button" className="inline-flex items-center px-3 py-2 text-gray-900 bg-gray-200 dark:bg-black border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-900" disabled={!session || isUpdating}>
@@ -122,6 +125,8 @@ export default function CartItemCounter({
                         </svg>
                     </button>
                 </div>
+            </div>
+        </>
             </div>
         </>
     );

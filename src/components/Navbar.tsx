@@ -9,6 +9,7 @@ import { authOptions } from '@/lib/authOptions';
 import { getServerSession } from 'next-auth/next';
 import Link from 'next/link';
 import { Session } from 'next-auth';
+import NavbarSignOutButton from './NavbarSignOutButton';
 
 export default async function Navbar() {
     const session: Session | null = await getServerSession(authOptions);
@@ -43,24 +44,24 @@ export default async function Navbar() {
                                     <span className='sr-only'>User profile</span>
                                     <UserIcon className='h-6 w-6' aria-hidden='true' />
                                 </NavbarButton>
-                                <NavbarButton href='/api/auth/signout'>
+                                <NavbarSignOutButton>
                                     <span className='sr-only'>Sign out</span>
                                     <ArrowRightOnRectangleIcon
                                         className='h-6 w-6'
                                         aria-hidden='true'
                                     />
-                                </NavbarButton>
+                                </NavbarSignOutButton>
                             </>
                         ) : (
                             <>
                                 <Link
-                                    href='#'
+                                    href='/auth/signup'
                                     className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-gray-100'
                                 >
                                     Sign up
                                 </Link>
                                 <Link
-                                    href='/api/auth/signin'
+                                    href='/auth/signin'
                                     className='rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-gray-100'
                                 >
                                     Sign in
