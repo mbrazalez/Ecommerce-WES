@@ -19,7 +19,7 @@ export default async function Cart() {
             <h3 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>
                 My Shopping Cart
             </h3>
-            <CartItemsList />
+            <CartItemsList /> {/* Client component */}
         </div>
     );
 }

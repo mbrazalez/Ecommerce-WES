@@ -38,7 +38,7 @@ export default function CartItemCounter({
 
             if (res.ok) {
                 const body = await res.json();
-                updateCartItems(body.cartItems);
+                updateCartItems(body.cartItems); // Update context provider
             }
         } finally {
             setIsUpdating(false);

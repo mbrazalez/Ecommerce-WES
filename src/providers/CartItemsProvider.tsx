@@ -4,66 +4,66 @@ import React, { createContext, useCallback, useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
 export interface CartItem {
-  product: {
-    _id: string;
-    name: string;
-    price: number;
-  };
-  qty: number;
+    product: {
+        _id: string;
+        name: string;
+        price: number;
+    };
+    qty: number;
 }
 
 interface ICartItemsContext {
-  cartItems: CartItem[];
-  updateCartItems: (newCartItems: CartItem[]) => void;
+    cartItems: CartItem[];
+    updateCartItems: (newCartItems: CartItem[]) => void;
 }
 
 export const CartItemsContext = createContext<ICartItemsContext>({
-  cartItems: [],
-  updateCartItems: () => {},
+    cartItems: [],
+    updateCartItems: () => { },
 });
 
 interface CartItemsProviderProps {
-  children?: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 export const CartItemsProvider = function ({
-  children,
+    children,
 }: CartItemsProviderProps) {
-  const { data: session } = useSession();
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+    const { data: session } = useSession();
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const updateCartItems = useCallback((newCartItems: CartItem[]) => {
-    setCartItems((prevCartItems: CartItem[]) =>
-      newCartItems.map((newCartItem) => {
-        const prevCartItem = prevCartItems.find(
-          (cartItem) => cartItem.product._id === newCartItem.product._id
+    const updateCartItems = useCallback((newCartItems: CartItem[]) => {
+        setCartItems((prevCartItems: CartItem[]) =>
+            newCartItems.map((newCartItem) => {
+                const prevCartItem = prevCartItems.find(
+                    (cartItem) => cartItem.product._id === newCartItem.product._id
+                );
+                if (prevCartItem && prevCartItem.qty === newCartItem.qty) {
+                    return prevCartItem;
+                } else {
+                    return newCartItem;
+                }
+            })
         );
-        if (prevCartItem && prevCartItem.qty === newCartItem.qty) {
-          return prevCartItem;
+    }, []);
+
+    useEffect(() => { // executed on Session change => , [session]
+        if (session) {
+            const fetchData = async function () {
+                const res = await fetch(`/api/users/${session.user._id}/cart`);
+                const body = await res.json();
+                setCartItems(body.cartItems);
+            };
+
+            fetchData().catch(console.error);
         } else {
-          return newCartItem;
+            setCartItems([]);
         }
-      })
+    }, [session]); 
+
+    return (
+        <CartItemsContext.Provider value={{ cartItems, updateCartItems }}>
+            {children}
+        </CartItemsContext.Provider>
     );
-  }, []);
-
-  useEffect(() => {
-    if (session) {
-      const fetchData = async function () {
-        const res = await fetch(`/api/users/${session.user._id}/cart`);
-        const body = await res.json();
-        setCartItems(body.cartItems);
-      };
-
-      fetchData().catch(console.error);
-    } else {
-      setCartItems([]);
-    }
-  }, [session]);
-
-  return (
-    <CartItemsContext.Provider value={{ cartItems, updateCartItems }}>
-      {children}
-    </CartItemsContext.Provider>
-  );
 };

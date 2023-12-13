@@ -9,7 +9,7 @@ interface FormValues {
   password: string;
 }
 
-export default function SignInForm() {
+export default function SignInForm() { //The form has two states: error and FormValues
   const router = useRouter();
   const [error, setError] = useState<string>('');
   const [formValues, setFormValues] = useState<FormValues>({
