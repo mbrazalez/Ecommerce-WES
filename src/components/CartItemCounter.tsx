@@ -46,11 +46,54 @@ export default function CartItemCounter({
         }
     };
 
+    const onMinusBtnClick = async function (event: React.MouseEvent) {
+        setIsUpdating(true);
+
+        try {
+            const res = await fetch(
+                `/api/users/${session!.user._id}/cart/${productId}`,
+                {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        qty: qty - 1,
+                    }),
+                }
+            );
+
+            if (res.ok) {
+                const body = await res.json();
+                updateCartItems(body.cartItems);
+            }
+        } finally {
+            setIsUpdating(false);
+        }
+    };
+
+    const onRemoveBtnClick = async function (event: React.MouseEvent) {
+        setIsUpdating(true);
+
+        try {
+            const res = await fetch(
+                `/api/users/${session!.user._id}/cart/${productId}`,
+                {
+                    method: 'DELETE',
+                }
+            );
+
+            if (res.ok) {
+                const body = await res.json();
+                //deleteCartItem(body.cartItems);
+            }
+        } finally {
+            setIsUpdating(false);
+        }
+        
+    };
+
     return (
         <>
-        <div className="flex items-center">                         
         <div className="inline-flex rounded-md shadow-sm " role="group" >
-            <button type="button" className="inline-flex items-center px-3 py-2 text-gray-900 bg-gray-200 dark:bg-black border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-900">
+            <button onClick={onMinusBtnClick} type="button" className="inline-flex items-center px-3 py-2 text-gray-900 bg-gray-200 dark:bg-black border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-900" disabled={!session || isUpdating}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                     <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
                 </svg>
@@ -71,7 +114,6 @@ export default function CartItemCounter({
                 </svg>
             </button>
         </div>
-    </div>
     </>
     )
 

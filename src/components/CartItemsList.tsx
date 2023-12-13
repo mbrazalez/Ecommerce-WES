@@ -45,9 +45,11 @@ export default function CartItemsList() {
                                             </Link>
                                         </th>
                                         <td className="px-6 py-4">
-                                            <CartItemCounter 
-                                                productId={cartItem.product._id.toString()}
-                                            />
+                                            <div className="flex items-center">
+                                                <CartItemCounter 
+                                                    productId={cartItem.product._id.toString()}
+                                                />
+                                            </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {cartItem.product.price+ ' €'}
