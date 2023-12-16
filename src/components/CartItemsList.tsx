@@ -14,17 +14,22 @@ export default function CartItemsList() {
 
     useEffect(() => {
         if (session) {
-            const fetchData = async function () {
+            const fetchData = async () => {
                 const res = await fetch(`/api/users/${session.user._id}/cart`);
                 const body = await res.json();
-                updateCartItems(body.cartItems);
+
+                if (res.ok) {
+                    updateCartItems(body.cartItems);
+                } else {
+                    console.error('Failed to fetch cart items');
+                }
             };
 
             fetchData().catch(console.error);
         } else {
             updateCartItems([]);
         }
-    }, [updateCartItems, session]);
+    }, [session, updateCartItems]);
 
 
 
