@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useContext } from 'react';
 import { CartItemsContext } from '@/providers/CartItemsProvider';
 import CartItemCounterV from '@/components/CartItemCounterV2';

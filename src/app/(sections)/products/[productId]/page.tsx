@@ -4,7 +4,7 @@ import { getProduct } from '@/lib/handlers';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
-import CartItemCounterWrapper from '@/components/CartItemCounter';
+import CartItemCounterWrapper from '@/components/CartItemCounterWrapper';
 
 export default async function Product({
     params,
