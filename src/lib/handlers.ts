@@ -99,6 +99,7 @@ export interface ProductsResponse {
 }
 
 export interface ProductResponse {
+  _id: Types.ObjectId | string;
   name: string;
   brand: string;
   price: number;
