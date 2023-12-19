@@ -2,7 +2,7 @@
 
 import React, { useEffect, useContext } from 'react';
 import { CartItemsContext } from '@/providers/CartItemsProvider';
-import CartItemCounterV from '@/components/CartItemCounterV2';
+import CartItemCounter from '@/components/CartItemCounter';
 import { useSession } from 'next-auth/react';
 
 const CartItemCounterWrapper = ({ productId }: { productId: string }) => {
@@ -32,7 +32,7 @@ const CartItemCounterWrapper = ({ productId }: { productId: string }) => {
 
     }, [updateCartItems, session]);
 
-    return <CartItemCounterV productId={productId} cartList={cartItems} />;
+    return <CartItemCounter productId={productId} />;
 };
 
 export default CartItemCounterWrapper;
