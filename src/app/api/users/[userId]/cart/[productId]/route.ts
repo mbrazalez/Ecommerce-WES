@@ -13,7 +13,7 @@ export async function PUT (
     }: {
         params: { userId: string, productId: string };
     }
-): Promise<NextResponse<CartItemsResponse> | {}> {
+): Promise<NextResponse<CartItemsResponse | {}>> {
 
     const session: Session | null =
     await getServerSession(authOptions);
@@ -53,7 +53,7 @@ export async function DELETE (
     }: {
         params: { userId: string, productId: string };
     }
-): Promise<NextResponse<CartItemsResponse> | {}> {
+): Promise<NextResponse<CartItemsResponse | {}>> {
     const session: Session | null =
     await getServerSession(authOptions);
 

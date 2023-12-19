@@ -13,7 +13,7 @@ export async function GET(
   }: {
     params: { userId: string };
   }
-): Promise <NextResponse<UserResponse> | {}> {
+): Promise <NextResponse<UserResponse | {}>> {
   const session: Session | null =
     await getServerSession(authOptions);
 

@@ -13,7 +13,7 @@ export async function GET(
     }: {
         params: { userId: string };
     }
-): Promise<NextResponse<CartItemsResponse> | {}> {
+): Promise<NextResponse<CartItemsResponse | {}>> {
     const session: Session | null =
     await getServerSession(authOptions);
 

@@ -3,7 +3,7 @@ import { createUser, CreateUserResponse } from '@/lib/handlers';
 
 export async function POST(
     request: NextRequest
-): Promise<NextResponse<CreateUserResponse> | {}> {
+): Promise<NextResponse<CreateUserResponse | {}>> {
     const body = await request.json();
 
     if (!body.email || !body.password || !body.name || !body.surname || !body.address || !body.birthdate) {

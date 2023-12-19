@@ -13,7 +13,7 @@ export async function GET(
     }: {
       params: { userId: string };
     }
-): Promise<NextResponse<OrdersResponse> | {}> {
+): Promise<NextResponse<OrdersResponse | {}>> {
   const session: Session | null =
   await getServerSession(authOptions);
 
@@ -45,7 +45,7 @@ export async function POST(
     }: {
       params: { userId: string };
     },
-): Promise<NextResponse<OrdersResponse> | {} | 'empty'> {
+): Promise<NextResponse<OrdersResponse | {} | 'empty'>> {
   const session: Session | null =
   await getServerSession(authOptions);
 

@@ -1,4 +1,4 @@
-import { ProductsResponse, getProduct } from "@/lib/handlers";
+import { ProductResponse, getProduct } from "@/lib/handlers";
 import { Types } from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,7 +11,7 @@ export async function GET(
     }: {
         params: { productId: string };
     }
-): Promise<NextResponse<ProductsResponse> | {}> {
+): Promise<NextResponse<ProductResponse | {}>> {
     if (!Types.ObjectId.isValid(params.productId)) {
         return NextResponse.json({}, { status: 400 });
     }
