@@ -47,7 +47,7 @@ export const CartItemsProvider = function ({
         );
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { // executed on Session change => , [session]
         if (session) {
             const fetchData = async function () {
                 const res = await fetch(`/api/users/${session.user._id}/cart`);
@@ -59,7 +59,7 @@ export const CartItemsProvider = function ({
         } else {
             setCartItems([]);
         }
-    }, [session]);
+    }, [session]); 
 
     return (
         <CartItemsContext.Provider value={{ cartItems, updateCartItems }}>
