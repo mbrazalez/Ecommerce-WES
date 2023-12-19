@@ -37,6 +37,7 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "html-loader": "^4.2.0",
     "tsx": "^3.12.7"
   }
 }

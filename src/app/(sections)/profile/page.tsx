@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
 import { notFound, redirect } from 'next/navigation';

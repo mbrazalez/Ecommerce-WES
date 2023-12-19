@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createUser } from '@/lib/handlers';
 
 interface FormValues {
     email: string;
@@ -33,22 +32,22 @@ export default function SignUpForm() {
             return false;
         }
 
-        try {
-            const res = await fetch(`/api/users`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify(formValues),
-                });
+        const res = await fetch(`/api/users`,
+            {
+                method: 'POST',
+                body: JSON.stringify(formValues),
+            });
 
-            if (res.ok) {
-                const body = await res.json();
-                createUser(body.formValues);
-            }
-        }
-        finally {
-            setError('');
-            router.push('/');
+        if (res.ok) {
+            router.push('/auth/signin');
             router.refresh();
+        } else {
+            if (res.status === 400) {
+                setError('E-mail already exists. Please try again.')
+            }else{
+                setError('An error occurred while processing your request. Please try again later.')
+            }
+            
         }
     };
 
@@ -94,7 +93,7 @@ export default function SignUpForm() {
                     name='name'
                     type='text'
                     autoComplete='name'
-                    placeholder='John Doe'
+                    placeholder='John'
                     required
                     className='peer mt-2 block w-full rounded-md border-0 px-1.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-500'
                     value={formValues.name}
@@ -102,6 +101,34 @@ export default function SignUpForm() {
                         setFormValues((prevFormValues) => ({
                             ...prevFormValues,
                             name: e.target.value,
+                        }))
+                    }
+                />
+                <p className='mt-2 hidden text-sm text-red-500 peer-[&:not(:placeholder-shown):not(:focus):invalid]:block'>
+                    Please provide a valid email address.
+                </p>
+            </div>
+
+            <div>
+                <label
+                    htmlFor='surname'
+                    className='block text-sm font-medium leading-6 text-gray-900'
+                >
+                    Surname
+                </label>
+                <input
+                    id='surname'
+                    name='surname'
+                    type='text'
+                    autoComplete='surname'
+                    placeholder='Doe'
+                    required
+                    className='peer mt-2 block w-full rounded-md border-0 px-1.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-500'
+                    value={formValues.surname}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setFormValues((prevFormValues) => ({
+                            ...prevFormValues,
+                            surname: e.target.value,
                         }))
                     }
                 />
@@ -150,7 +177,7 @@ export default function SignUpForm() {
                     name='address'
                     type='text'
                     autoComplete='address'
-                    placeholder='John Doe'
+                    placeholder='C/Felipe II, 24'
                     required
                     className='peer mt-2 block w-full rounded-md border-0 px-1.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 invalid:[&:not(:placeholder-shown):not(:focus)]:ring-red-500'
                     value={formValues.address}

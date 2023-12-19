@@ -2,7 +2,6 @@ import SignUpForm from '@/components/SignUpForm';
 
 export default function SignUp() {
     return (
-        <>
         <div className='flex w-full flex-col px-6 py-12'>
             <div className='mx-auto w-full max-w-sm'>
                 <img
@@ -11,7 +10,7 @@ export default function SignUp() {
                     alt='ChanchiSkates logo'
                 />
                 <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-                    Sign up in Chanchi Skates
+                    Sign up in Chanchi skateboards
                 </h2>
             </div>
 
@@ -19,6 +18,5 @@ export default function SignUp() {
                 <SignUpForm />
             </div>
         </div>
-        </>
     );
 }

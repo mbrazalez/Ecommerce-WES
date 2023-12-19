@@ -4,7 +4,7 @@ import { getProduct } from '@/lib/handlers';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/authOptions';
-import CartItemCounter from '@/components/CartItemCounter';
+import CartItemCounterWrapper from '@/components/CartItemCounterWrapper';
 
 export default async function Product({
     params,
@@ -12,6 +12,7 @@ export default async function Product({
     params: { productId: string };
 }) {
     let qty = 0;
+    
     if (!Types.ObjectId.isValid(params.productId)) {
         notFound();
     }
@@ -41,22 +42,9 @@ export default async function Product({
                     <p className="flex justify-center text-4xl text-gray-900 py-2">{product.price} €</p>
                     {session && (
                     <div className="flex justify-center">  
-                        {/*<div className="inline-flex rounded-md shadow-sm " role="group" >
-                            <button type="button" className="inline-flex items-center px-4 py-1 text-gray-900 bg-gray-200 dark:bg-black border border-gray-900 rounded-s-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-900">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                    <path fillRule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clipRule="evenodd" />
-                                </svg>
-                            </button>
-                            <button type="button" className="inline-flex items-center px-14 py-1 text-xl font-medium text-gray-900 bg-transparent dark:bg-gray-700 border-t border-b border-gray-900 dark:border-white dark:text-white dark:focus:bg-gray-700">
-                                0
-                            </button>
-                            <button type="button" className="inline-flex items-center px-4 py-1 text-gray-900 bg-gray-200 dark:bg-black border border-gray-900 rounded-e-lg hover:bg-gray-900 hover:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-900">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-                                    <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                                </svg>
-                            </button>
-                        </div>*/}
-                        <CartItemCounter productId={product._id.toString()} />
+                        <CartItemCounterWrapper 
+                            productId={params.productId}
+                        />
                     </div>
                     )}    
                 </div>

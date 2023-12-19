@@ -4,11 +4,12 @@ import {
     UserIcon,
 } from '@heroicons/react/24/outline';
 import NavbarButton from '@/components/NavbarButton';
+import NavbarCartButton from '@/components/NavbarCartButton';
 import { authOptions } from '@/lib/authOptions';
 import { getServerSession } from 'next-auth/next';
 import Link from 'next/link';
 import { Session } from 'next-auth';
-import NavbarCartButton from './NavbarCartButton';
+import NavbarSignOutButton from './NavbarSignOutButton';
 
 export default async function Navbar() {
     const session: Session | null = await getServerSession(authOptions);
@@ -25,7 +26,7 @@ export default async function Navbar() {
                             <img
                                 className='block h-8 w-auto'
                                 src='https://images.vexels.com/media/users/3/132153/isolated/preview/2b07e0f940d92cdf0b02e0256417d93b-icono-de-circulo-de-patinaje.png'
-                                alt='ChanchiSkates logo'
+                                alt='SkatesShop logo'
                             />
                             <div className='inline-block w-auto text-xl font-semibold'>
                                 Chanchi Skates
@@ -43,13 +44,13 @@ export default async function Navbar() {
                                     <span className='sr-only'>User profile</span>
                                     <UserIcon className='h-6 w-6' aria-hidden='true' />
                                 </NavbarButton>
-                                <NavbarButton href='/api/auth/signout'>
+                                <NavbarSignOutButton>
                                     <span className='sr-only'>Sign out</span>
                                     <ArrowRightOnRectangleIcon
                                         className='h-6 w-6'
                                         aria-hidden='true'
                                     />
-                                </NavbarButton>
+                                </NavbarSignOutButton>
                             </>
                         ) : (
                             <>
