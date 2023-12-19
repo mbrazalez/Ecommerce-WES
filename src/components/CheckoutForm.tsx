@@ -43,7 +43,7 @@ export default function CheckoutForm() {
         }
     };
 
-    const isFormValid = formValues.address && formValues.cardHolder && formValues.cardNumber;
+    const isFormValid = formValues.address && formValues.cardHolder && formValues.cardNumber && formValues.cardNumber.length === 16;
 
     return (
         <>
@@ -94,12 +94,17 @@ export default function CheckoutForm() {
                                     cardNumber: e.target.value,
                                 }))
                             }
-                            type="number"
+                            type="text"
                             name="cnumber"
                             id="cnumber"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="00000111122223333"
-                            required />
+                            pattern="[0-9]{16}"
+                            required
+                        />
+                        {formValues.cardNumber.length !== 16 && (
+                            <p className="text-sm text-red-500">Please enter a valid 16-digit card number.</p>
+                        )}
                     </div>
                 </div>
                 {error &&
